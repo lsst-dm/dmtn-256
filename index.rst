@@ -18,16 +18,6 @@ The results are comparisons based on the number of detections, and the use of fa
 The results indicate no significant changes in the overall performance of the pipeline, our data is however not demonstrating that better accuracy and efficiency in detecting differences between multiple images is not possible, but instead, that the dataset used might not be the best scenario to uncover the advantages of these different configuration modes to the default standard DIA algorithm.
 These findings could potentially benefit future test dataset construction for a correct evaluation of the DIA algorithm for identifying transient astronomical events, in particular, the design of new fake source injected samples.
 
-.. Topics and contents
-.. ================
-
-.. .. toctree::s
-
-..     intro.rst
-..     dataset_outcome.rst
-..     diaSrcAnalysis.rst
-
-
 Introduction and objectives
 ===========================
 
@@ -71,7 +61,7 @@ Itemized list of analysis steps include:
  - Overall description of the image results
  - Filtered sources with flags.
  - Visualization of images and display of visible features.
-  - G and R filters with injections and detections
+   - G and R filters with injections and detections
  - Example stamps -- zooniverse tool
  - Estimation of Efficiency vs SNR and magnitude
  - Estimation of contamination
@@ -381,10 +371,9 @@ Number of matches
 
 We can expand the table that we built before to include the number of fake source matches.
 
-
 +-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
 |           | N diaSrc | N diaObj | Good diaSrc | Good diaObject | N Fakes Match |     diaSource |  N Fake matches |
-|           |          |          |             |                | N Fakes Match | contamination | after flag cuts |
+|           |          |          |             |                |               | contamination | after flag cuts |
 +===========+==========+==========+=============+================+===============+===============+=================+
 |   Default |    54799 |    33974 |       13244 |           6166 |        4627.0 |       50172.0 |          2391.0 |
 +-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
@@ -394,13 +383,19 @@ We can expand the table that we built before to include the number of fake sourc
 +-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
 
 
+CCD Illumination: X-Y distribution of detections
+================================================
 
+Looking at the distribution of the pixel coordinates of the detections we can try to obtain information about the algorithm performance around central and edge areas of the CCD. This contains valuable information about the capability of the algorithm to work in the full field of view and also can be of use when understanding the uniformity of the detections in the pixel field.
 
+.. figure:: /_static/figures/chipillum_x_y_histogram_diffim_flavors.png
+    :name: chipillum_x_y_histogram_diffim_flavors
+    :target: ../_images/chipillum_x_y_histogram_diffim_flavors.png
+    :alt: X-Y pixel coordinate distributions for diaSources
 
+    Distribution of the X and Y coordinates of the diaSources.
 
-
-
-
+Two important caveats of this plot are: the dimensions of the chip are 4096 by 2048, so X axis is smaller, and also, some detection centroids can end up in negative coordinates or, more generally coordinates that exceed the real CCD domain.
 
 
 .. .. figure:: /_static/figures/diasrcs_flux_hist.png
@@ -410,13 +405,6 @@ We can expand the table that we built before to include the number of fake sourc
 
 ..     Distribution of the PSF flux measurement of individual detections in the difference images
 
-
-
-.. A flat version of this note can be found in
-
-.. .. toctree::s
-..  :maxdepth: 2
-..   flatversion.rst
 
 
 .. Make in-text citations with: :cite:`bibkey`.
