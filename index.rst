@@ -133,17 +133,21 @@ As defined in the sprint, the data include:
 
 Run result details
 ^^^^^^^^^^^^^^^^^^
-
 * Used weekly `w_2023_07`
 * Working directory on USDF. is `/sdf/group/rubin/user/bos/DM-37957`
 * Templates are in `u/kherner/DM-33911/templates_bestThirdSeeing`
 * Results for **Default mode**
+
   * Final processing of HSC COSMOS is in `u/bos/DM-37957/w_2023_07_default`
   * ApDB is `/sdf/home/b/bos/u/DM-37957/apdb_bosdm37597.sqlite`
+
 * Results for **Auto convolution mode**
+
   * Final processing of HSC COSMOS is in `u/bos/DM-38186/w_2023_07_automode`
   * ApDB is `/sdf/home/b/bos/u/DM-38186/apdb_bosdm38186.sqlite`
+
 * Results for **Pre-convolution mode**
+
   * Final processing of HSC COSMOS is in `u/bos/DM-37959-HTCondor-preconv`
   * ApDB is in the postgres DB, schema is `bos_dm37959_preconv_w2023_07`
 
@@ -395,7 +399,112 @@ Looking at the distribution of the pixel coordinates of the detections we can tr
 
     Distribution of the X and Y coordinates of the diaSources.
 
-Two important caveats of this plot are: the dimensions of the chip are 4096 by 2048, so X axis is smaller, and also, some detection centroids can end up in negative coordinates or, more generally coordinates that exceed the real CCD domain.
+Two important caveats of this plot are: the dimensions of the chip are 4096 by 2048, so X axis is smaller, and finally some detection centroids can end up in negative coordinates or, more generally coordinates that exceed the real CCD domain.
+
+As a general note we understand that the number of transiend candidate detections should not depend on the location on the image CCD domain up to a certain extent. This means, there will be some loss of sensitivy on algorithms such as pre-convolution, as the edges will have incomplete information due to kernel padding. In the following figure we can see a zoom in into the interesting edge areas, for x and y axes.
+
+.. figure:: /_static/figures/chipillum_x_y_histogram_zoom_diffim_flavors.png
+    :name: chipillum_x_y_histogram_zoom_diffim_flavors
+    :target: ../_images/chipillum_x_y_histogram_zoom_diffim_flavors.png
+    :alt: X-Y pixel coordinate distributions for diaSources
+
+    Distribution of the X and Y coordinates of the diaSources, zoomed in the edges and central x-axis locations.
+
+Clearly the distribution has several spikes at different locations, central columns along the x-axis shows an excess of sources detected as well as the edges of all the algorithms feature an incredible amount of excess of transient detections (the plot y-axis is on logarithmic scale), even on some ocasions an order of magnitude greater than the overall value of :math:`10^2`.
+
+
+In the following figure we display the scatter of transient candidates.
+
+.. figure:: /_static/figures/chipillum_scatter_diffim_flavors.png
+    :name: chipillum_scatter_diffim_flavors
+    :target: ../_images/chipillum_scatter_diffim_flavors.png
+    :alt: Location of the detected sources in the CCD chip.
+
+    The location of the detected transient candidates in the CCD chip. We call this the "illumination" of the CCD. It is clear again, an excess of detections in the central pixel columns and the chip edges.
+
+The figure shows that there are columns with detection excess that can be removed, by using different flags or using information in the image mask plane. In the following figure we can see the scatter of the sources that pass the flag cuts.
+
+.. figure:: /_static/figures/chipillum_scatter_goodsrc_diffim_flavors.png
+    :name: chipillum_scatter_goodsrc_diffim_flavors
+    :target: ../_images/chipillum_scatter_goodsrc_diffim_flavors.png
+    :alt: Location of the detected sources in the CCD chip after common flag cuts.
+
+    Position of the detected transient candidates that pass flag cuts in the CCD chip.
+
+The flags cut the excess of detections up to certain level, and also leave areas in the CCD where now we have an artificial under-density of detections.
+
+.. figure:: /_static/figures/chipillum_x_y_histogram_goodsrcs_diffim_flavors.png
+    :name: chipillum_x_y_histogram_goodsrcs_diffim_flavors
+    :target: ../_images/chipillum_x_y_histogram_goodsrcs_diffim_flavors.png
+    :alt: X-Y pixel coordinate distributions for diaSources that pass flag cuts
+
+    Distribution of the X and Y coordinates of the diaSources that pass the conventional flag cuts.
+
+In the distribution of coordinates we can see that the edge excess and central excess get flattened and apparently the artifact sources are cut away.
+
+We can study again the location distribution, but as a function to the distance to the center of the image, however since the image is rectangular this will not yield a flat distribution.
+Instead we can weight each source detection by the area of the smallest central rectangle that contains the detection. This means, taking each pair of transient coordinate :math:`(x,y)` and transforming it to obtain the side of this rectangle: :math:`l = max(x', y')` with :math:`(x', y') = (x-x_c, y-y_c)`. The value :math:`\gamma` that we take finally into account is the fractional area with respect to the full CCD area: :math:`\gamma = l^2/(4096 \times 2048)`
+This quantity will be distributed as a random uniform distribution for a true random position of our
+
+.. figure:: /_static/figures/chipillum_areafraction_combined_diffim_flavors.png
+    :name: chipillum_areafraction_combined_diffim_flavors
+    :target: ../_images/chipillum_areafraction_combined_diffim_flavors.png
+    :alt: Fractional area factor of illumination.
+
+    Distribution of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the substraction.
+
+The distribution of this fractional value shows that instead of a flat profile, we get higher densities of detections closer to the edges of the CCD. The distribution changes if we look at the sources that pass flag cuts, however it doesn't become completely flat.
+
+.. figure:: /_static/figures/chipillum_areafraction_combined_logscale_diffim_flavors.png
+    :name: chipillum_areafraction_combined_logscale_diffim_flavors
+    :target: ../_images/chipillum_areafraction_combined_logscale_diffim_flavors.png
+    :alt: Fractional area factor of illumination.
+
+    Distribution (with the y-axis log-scale) of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the substraction.
+
+The distribution for the fakes that were found instead show that the edges are less frequent and this could mean that the flag cuts are discarding events that are effectively fake injections (i.e. true transient sources).
+This effect seems to be present to the same level on all the DIA flavors. This could point to some feature of the dataset from HSC or some other effect by the pipeline.
+
+
+Efficiency of transient detection
+=================================
+
+We attempted to estimate the efficiency of detecting transients. This can be done as a function of the transient magnitude, which would depend on the filter and exposure, as well as the instrument noise properties, or instead we can do it as a function of the Signal-to-Noise ratio (SNR).
+
+The main difficulty on the latter approach is to obtain an effective SNR even for fake injections that were not detected by the DIA pipeline. In that case, we must resource to a model of the noise properties of the image.
+
+
+Signal-to-Noise estimation
+--------------------------
+
+The pipeline photometry module estimates a single SNR, however it measures fluxes and their uncertainties using several methods; here we will use the conventional PSF photometry one.
+
+For a given point source at location :math:`(x_c, y_c)` its PSF flux estimation is: :math:`\rm{flux}(x_c, y_c) = \sum_{ij} \rm{Im}_{ij} \rm{PSF}(x_c, y_c)_{ij} / \sum \rm{PSF}^2`.
+
+The PSF flux variance is :math:`\sigma^2_f` due to the sky variance will be the weighted sum of the variance of the pixels, following a similar formula as above, but instead of :math:`\rm{Im}_{ij}` we use the variance plane :math:`\rm{Var}_{ij}`. In the following :ref:`figure <fig-snr-pipe-vs-snrvariance>` we can see that the SNR from the pipeline and the one estimated by the described method are not equal.
+
+.. figure:: /_static/figures/snr_pipe_vs_snrvariance.png
+    :name: fig-snr-pipe-vs-snrvariance
+    :target: ../_images/snr_pipe_vs_snrvariance.png
+    :alt: SNR from the pipeline vs PSF weighted variance plane
+
+    The estimated SNR from PSF weighted sum of the variance plane as a function of the SNR that the pipeline assigns. This plot is only possible for the found fakes, as the lost fake sample has no SNR estimation from the pipeline.
+
+Our estimation of SNR is not in agreement with the reported SNR from the pipeline and instead we will use a different proxy SNR, by modelling the uncertainties as done previously in other works such as `Sanchez et al 2022`_.
+
+.. _Sanchez et al 2022: https://ui.adsabs.harvard.edu/link_gateway/2022ApJ...934...96S/doi:10.3847/1538-4357/ac7a37
+
+To predict the SNR for a given point source of magnitude :math:`m` we first convert the magnitude value to flux in nanoJansky units, and make use of the calibration to obtain the pixel count values directly.
+Next we use the image variance plane to obtain a median variance estimate around the object :math:`\sigma_{sky}`, and multiply this with the noise-equivalent area given by the factor :math:`[\sum \rm{PSF}^2]^{-1}`. Additional terms in the variance that we include are the zeropoint calibration error and the flux count variance (following a Poisson distribution law).
+
+The obtained calculated SNR is close to the pipeline SNR, but not exactly equal. In the folowing :ref:`figure <fig-snr-model-vs-snrflavors>` we find that the distributions do not agree completely, but do follow a similar shape profile.
+
+.. figure:: /_static/figures/snr_model_vs_snrflavors.png
+    :name: fig-snr-model-vs-snrflavors
+    :target: ../_images/snr_model_vs_snrflavors.png
+
+    The distributions of the several SNR estimated and reported by the pipeline: `SNR`, `psFluxSNR`, and `totFluxSNR` and the ones estimated independently using the variance `est. SNR` and the full model `Model SNR`.
+
 
 
 .. .. figure:: /_static/figures/diasrcs_flux_hist.png
