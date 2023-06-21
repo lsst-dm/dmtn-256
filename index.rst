@@ -52,24 +52,24 @@ Our main task is clear: to compare the diffrent flavors or DIA implementations, 
 In the analysis we have included a standard analysis part inspired by notebooks in the repos of ap-pipe notebooks.
 We have also included a few analysis bits not present in dm notebooks, and were obtained in a more exploratory work stage.
 
-Topics and Contents
--------------------
+.. Topics and Contents
+.. -------------------
 
-Itemized list of analysis steps include:
+.. Itemized list of analysis steps include:
 
+..  -
+..  - Overall description of the image results
+..  - Filtered sources with flags.
+..  - Visualization of images and display of visible features.
+..    - G and R filters with injections and detections
+..  - Example stamps -- zooniverse tool
+..  - Estimation of Efficiency vs SNR and magnitude
+..  - Estimation of contamination
+..  - Estimation of the photometric properties of candidates
+..  - Estimation of the crossmatched object properties like n_srcs and coord rms
+..  - Duplicating the analisis items listed above with focus on the flags
 
- - Overall description of the image results
- - Filtered sources with flags.
- - Visualization of images and display of visible features.
-   - G and R filters with injections and detections
- - Example stamps -- zooniverse tool
- - Estimation of Efficiency vs SNR and magnitude
- - Estimation of contamination
- - Estimation of the photometric properties of candidates
- - Estimation of the crossmatched object properties like n_srcs and coord rms
- - Duplicating the analisis items listed above with focus on the flags
-
-.. TODO change this list at the end of esditing
+.. .. TODO change this list at the end of esditing
 
 
 `ip_diffim` Difference Image Analysis Algorithms
@@ -526,6 +526,40 @@ Efficiency estimation
 ---------------------
 
 We calculate the efficiency of detecting the fake injected sources as a function of the Model and estimated SNR values.
+
+Our fitting procedure is using the binomial distribution model for the detection of a fake transient, this results in a sigmoid function model :math:`\rm{eff}(x) = [1 + e^{-a (x - b)}]`, and our error estimation is according to the variance of this distribution.
+
+.. figure:: /_static/figures/eff_estimation_diffim_flavors.png
+    :name: fig-eff-estimation-diffim-flavors
+    :target: ../_images/eff_estimation_diffim_flavors.png
+
+    The efficiency of the pipelines for finding fake transient sources, for the different DIA flavors. The SNR used is the `Model SNR`.
+
+.. figure:: /_static/figures/eff_estimation_diffim_flavors_estsnr.png
+    :name: fig-eff-estimation-diffim-flavors-estsnr
+    :target: ../_images/eff_estimation_diffim_flavors_estsnr.png
+
+    The efficiency of the pipelines for finding fake transient sources, for the different DIA flavors. The SNR used is the `estimated SNR`.
+
+We observe that for each of the SNR estimations the efficiency measurement lacks signal in the bins with low-SNR (from 0 to 5), where apparently we have not enough sources to obtain a real efficiency profile function.
+
+We define the SNR at 50% efficiency :math:`SNR_{1/2}`, and from our modelling we obtain that it is oscillating just below :math:`SNR_{1/2} = 5`. We might be observing in this case the SNR detection threshold that is configured by default in the pipelines.
+
+Our results point also that the efficiency is good at :math:`SNR>5`, but it is not reaching a stable value, and it oscilates dropping up to an 80%. This should instead be approaching to a 100% upper bound.
+
+
+
+Assesment of the photometric performance
+========================================
+
+We try to understand the resuls of photometric measurements using the fake injections.
+For this we make use of the injection magnitude and the recovered or measured magnitude value their difference :math:`\Delta m = \rm{mag} - \rm{mag_{true}}` and the flux pull values :math:`(\rm{flux} - \rm{flux_{true}})/\sigma_{\rm{flux}}`.
+
+.. figure:: /_static/figures/mag_offset_vs_SNR_diffim_flavors.png
+    :name: fig-mag-offset-vs-SNR-diffim-flavors
+    :target: ../_images/mag_offset_vs_SNR_diffim_flavors.png
+
+
 
 
 
