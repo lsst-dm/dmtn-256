@@ -490,20 +490,44 @@ The PSF flux variance is :math:`\sigma^2_f` due to the sky variance will be the 
 
     The estimated SNR from PSF weighted sum of the variance plane as a function of the SNR that the pipeline assigns. This plot is only possible for the found fakes, as the lost fake sample has no SNR estimation from the pipeline.
 
-Our estimation of SNR is not in agreement with the reported SNR from the pipeline and instead we will use a different proxy SNR, by modelling the uncertainties as done previously in other works such as `Sanchez et al 2022`_.
+Our estimation of SNR is not in agreement with the reported SNR from the pipeline and instead we can use a different proxy SNR (heare after Model SNR), by modelling the uncertainties as done previously in other works such as `Sanchez et al 2022`_.
 
 .. _Sanchez et al 2022: https://ui.adsabs.harvard.edu/link_gateway/2022ApJ...934...96S/doi:10.3847/1538-4357/ac7a37
 
 To predict the SNR for a given point source of magnitude :math:`m` we first convert the magnitude value to flux in nanoJansky units, and make use of the calibration to obtain the pixel count values directly.
 Next we use the image variance plane to obtain a median variance estimate around the object :math:`\sigma_{sky}`, and multiply this with the noise-equivalent area given by the factor :math:`[\sum \rm{PSF}^2]^{-1}`. Additional terms in the variance that we include are the zeropoint calibration error and the flux count variance (following a Poisson distribution law).
 
-The obtained calculated SNR is close to the pipeline SNR, but not exactly equal. In the folowing :ref:`figure <fig-snr-model-vs-snrflavors>` we find that the distributions do not agree completely, but do follow a similar shape profile.
+The obtained calculated SNR values are close to the pipeline SNR, but not exactly equal. In the folowing :ref:`figure <fig-snr-model-vs-snrflavors>` we find that the distributions do not agree completely, but do follow a similar shape profile.
 
 .. figure:: /_static/figures/snr_model_vs_snrflavors.png
     :name: fig-snr-model-vs-snrflavors
     :target: ../_images/snr_model_vs_snrflavors.png
 
     The distributions of the several SNR estimated and reported by the pipeline: `SNR`, `psFluxSNR`, and `totFluxSNR` and the ones estimated independently using the variance `est. SNR` and the full model `Model SNR`.
+
+When compared individually, as in the following :ref:`figures <fig-fake-snr_over-pred-snr-vs-fakemag-templt-and-science>`, we see that the estimated SNR using the variance plane is in better agreement to the pipeline reported SNR, although it is having problems at low-SNR for template fake sources.
+
+
+.. figure:: /_static/figures/fake_snr_over_pred_snr_vs_fakemag_templt_and_science.png
+    :name: fig-fake-snr_over-pred-snr-vs-fakemag-templt-and-science
+    :target: ../_images/fake_snr_over_pred_snr_vs_fakemag_templt_and_science.png
+
+    The ratio of the `Model SNR` to the pipeline reported `SNR`, for each subtraction method and as a function of the pipeline reported `SNR` and the Fake Magnitude. We also split between science and template fakes.
+
+.. figure:: /_static/figures/fake_snr_over_est_snr_vs_fakemag_templt_and_science.png
+    :name: fig-fake-snr_over-est-snr-vs-fakemag-templt-and-science
+    :target: ../_images/fake_snr_over_est_snr_vs_fakemag_templt_and_science.png
+
+    The ratio of the variance `estimated SNR`` to the pipeline reported `SNR`, for each subtraction method and as a function of the pipeline reported `SNR` and the Fake Magnitude. We also split between science and template fakes.
+
+
+
+Efficiency estimation
+---------------------
+
+We calculate the efficiency of detecting the fake injected sources as a function of the Model and estimated SNR values.
+
+
 
 
 
