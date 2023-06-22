@@ -58,4 +58,4 @@ refresh-bib:
 	@echo "Commit the new bibliographies: git add lsstbib && git commit -m \"Update bibliographies.\""
 
 auto:
-	sphinx-autobuild --port 9123 --delay 5 . $(BUILDDIR)/autohtml
+	sphinx-autobuild --port 9123 --delay 5 . $(BUILDDIR)/autohtml --ignore=./plots/*.png

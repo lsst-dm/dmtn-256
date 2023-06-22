@@ -26,7 +26,7 @@ About this report
 
 This technical note objective is to report the resuls of a run of a recent version of the AP pipeline using the HSC "DIA Sprint" dataset.
 
-The dataset is described in :ref:`2021 diffim sprint <section-dataset-types>`.
+The dataset is described in :ref:`2021 diffim sprint <section-dataset>`.
 
 The objectives were made explicit in a series of JIRA tickets, stating multiple tasks and a final ticket asking for this present report, that rounds up the analysis and extracts final conclusions in order to plan future developments on `ip_diffim` and it's corresponant testing.
 
@@ -151,6 +151,7 @@ Run result details
   * Final processing of HSC COSMOS is in `u/bos/DM-37959-HTCondor-preconv`
   * ApDB is in the postgres DB, schema is `bos_dm37959_preconv_w2023_07`
 
+.. _section-dataset-types:
 
 Dataset type outputs
 --------------------
@@ -375,16 +376,21 @@ Number of matches
 
 We can expand the table that we built before to include the number of fake source matches.
 
-+-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
-|           | N diaSrc | N diaObj | Good diaSrc | Good diaObject | N Fakes Match |     diaSource |  N Fake matches |
-|           |          |          |             |                |               | contamination | after flag cuts |
-+===========+==========+==========+=============+================+===============+===============+=================+
-|   Default |    54799 |    33974 |       13244 |           6166 |        4627.0 |       50172.0 |          2391.0 |
-+-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
-|  Pre-Conv |    60243 |    41343 |       10909 |           6381 |        4594.0 |       55649.0 |          1732.0 |
-+-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
-| Auto Mode |    50049 |    30926 |       13727 |           6698 |        4321.0 |       45728.0 |          2348.0 |
-+-----------+----------+----------+-------------+----------------+---------------+---------------+-----------------+
+.. _table-nfakematches:
+
+.. table:: Table with number of fake matches per DIA flavor.
+
+    +-----------+-------------+----------------+---------------+---------------+---------------------+
+    |           | Good diaSrc | Good diaObject | N Fakes Match | contamination |  Matches w/flag cuts|
+    +===========+=============+================+===============+===============+=====================+
+    |   Default |       13244 |           6166 |        4627.0 |       50172.0 |              2391.0 |
+    +-----------+-------------+----------------+---------------+---------------+---------------------+
+    |  Pre-Conv |       10909 |           6381 |        4594.0 |       55649.0 |              1732.0 |
+    +-----------+-------------+----------------+---------------+---------------+---------------------+
+    | Auto Mode |       13727 |           6698 |        4321.0 |       45728.0 |              2348.0 |
+    +-----------+-------------+----------------+---------------+---------------+---------------------+
+
+We can see that the amount of matches decreases to almost a 50% when applying the flag cuts. Our conclusion is that maybe our set of flags is too agressive, and it is not really discriminating the real transients from the potential artifacts, but instead vettoing on information that might or might not be relevant.
 
 
 CCD Illumination: X-Y distribution of detections
@@ -559,7 +565,7 @@ For this we make use of the injection magnitude and the recovered or measured ma
     :name: fig-mag-offset-vs-SNR-diffim-flavors
     :target: ../_images/mag_offset_vs_SNR_diffim_flavors.png
 
-
+    The offset magnitude :math:`\Delta m` for the found fakes as a function of SNR.
 
 
 
