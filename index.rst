@@ -567,18 +567,74 @@ For this we make use of the injection magnitude and the recovered or measured ma
 
     The offset magnitude :math:`\Delta m` for the found fakes as a function of SNR.
 
+From Figure 23 we find that the scatter on the offsets is higher than expected, with offsets :math:`\Delta m \simeq \pm 1`. 
+This is indistiguishable for DIA flavors, as they yield almost identical scatter results. 
+
+For the analysis of the pull distribution we define an outlier set, that have an offset :math:`|\Delta m | > 0.1` and have a reported PSF flux SNR :math:`>0.5`.
+
+.. figure:: /_static/figures/pull_distribution_w_outliers_diffim_flavors.png
+    :name: fig-pull-distribution-w-outliers-diffim-flavors
+    :target: ../_images/pull_distribution_w_outliers_diffim_flavors.png
+
+    The pull distribution for the found fakes as a function of SNR. The plot is split in outliers and "inliers".
+
+When looking at the pull distributions we see in the outliers a bump with large negative pull values. When inspecting this we find that this sample is the "Template Fake" set, that is to say, transients injected in the template images. In the next figure we can confirm this.
+
+.. figure:: /_static/figures/pull_distribution_w_outliers_diffim_flavors_onlytemplatefake.png
+    :name: fig-pull-distribution-w-outliers-diffim-flavors-onlytemplatefake
+    :target: ../_images/pull_distribution_w_outliers_diffim_flavors_onlytemplatefake.png
+
+    The pull distribution for the found fakes as a function of SNR only for the Template Fakes.
 
 
+Template Seeing Analysis 
+========================
+
+We analyze the PSF sizes for the images, including their templates. This is relevant for our analysis, given that the different flavors of DIA will behave differently mainly as a function of these two parameters. 
+For the PSF size we use again the PSF noise equivalent area factor and transform it to an equivalent radius, assuming circular shape: :math:`r_{\rm{eff}} = \sqrt{\rm{PSF_{NEA}}/(2\pi))}`.
+
+In the following figure we show the distributions of the PSF :math:`r_{\rm{eff}}` sizes for Templates and Science images, for both used filters G and R. 
+
+.. figure:: /_static/figures/psf_nea_circradius_filters_template_vs_science.png
+    :name: fig-psf_nea_circradius_filters_template_vs_science
+    :target: ../_images/psf_nea_circradius_filters_template_vs_science.png
+
+    The PSF :math:`r_{\rm{eff}}` sizes for Templates and Science images, for both used filters G and R
+
+The difference in radius between a Science image an its template would give us information on whether the DIA method needs to fit a kernel for deconvolution or not.
+
+.. figure:: /_static/figures/psf_nea_circradius_filters_delta_template_science.png
+    :name: fig-psf_nea_circradius_filters_delta_template_science
+    :target: ../_images/psf_nea_circradius_filters_delta_template_science.png
+
+    The delta PSF :math:`r_{\rm{eff}}` sizes for Templates and Science images, for both used filters G and R.
+
+Our conclusion for this is that the used dataset is not exposing the DIA methods to the scenario where deconvolution of the science image is needed. In our final reccommendations we suggest that for testing the DIA pipeline is key to use datasets that have the (un)-desired scenarios that we expect the pipeline handle successfully during operations.
+
+In our following figure we take a look at the number of detections per images.
+
+.. figure:: /_static/figures/n_sources_vs_psf_delta_template_science.png
+    :name: fig-n_sources_vs_psf_delta_template_science
+    :target: ../_images/n_sources_vs_psf_delta_template_science.png
+
+    Number of diaSource detections for each DIA flavor, as a function of the difference of PSF size between the Template and Science images. We overlay both filters used (G and R) and show the Number of sources before and after flag cuts. In the right panels we include the same plot but using logarithmic scale on the y axis.
+
+We do not observe a dependency on the number of detections with the difference in PSF size. The number of detections is actually very similar for all the DIA flavors. 
 
 
-.. .. figure:: /_static/figures/diasrcs_flux_hist.png
-..     :name: diasrcs_flux_hist
-..     :target: ../_images/diassrcs_flux_hist.png
-..     :alt: Flux of detected sources in difference images
+Conclusions
+===========
 
-..     Distribution of the PSF flux measurement of individual detections in the difference images
+We run the ApPipeWithFakes pipeline on HSC G and R data, using three different setups for the DIA "flavor": the default Alard & Lupton, the convolution-auto mode, and the pre-convolution mode.
+We can extract a few conclusions on this comparative analysis.
 
-
+ * The number of fake injections is too low to get enough statistical signal for efficiency measurement.
+ * The SNR of the fake injections is too high to probe the low-SNR regime of the image dynamic range.
+ * The flag cuts conventionally applied are too aggressive and would potentially discard good transient sources. 
+ * The photometric accuracy is around 0.2 magnitudes, and seems to be not up to the requirement specification.
+ * Our dataset for this test does not contain some specific scenarios in which the various DIA flavors should out-perform the default Alard & Lupton technique. Probably incorporating some cases with bad seeing on the templates is of value for testing purposes.
+ * The number of detections around the edges of CCDs are high, although correct flagging could potentially fix this issue.
+ * Understanding correctly how to model the SNR for point sources of a given magnitude could yield value in the assessment of the limit of detections. Particularly identifying the correct variance model for source pixels, background and calibration would be beneficial. Additionally, this could be of use when optimizing the DIA source detection threshold. 
 
 .. Make in-text citations with: :cite:`bibkey`.
 .. Uncomment to use citations
