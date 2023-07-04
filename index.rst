@@ -85,7 +85,7 @@ The image equalization is derived from point-spread function (PSF) matching the 
 
 :math:`D = N - k * R`
 
-In this setting, the problem is being solved by transforming R so its PSF matches the PSF from N image, and the solution for kernel k is obtained by means of a basis function expansion and a linear chi square minization. Tipycally k can express kernels that involve broadening of the PSF, but any scenario in which the operation turns into a de-convulution the method faces great difficulties.
+In this setting, the problem is being solved by transforming R so its PSF matches the PSF from N image, and the solution for kernel k is obtained by means of a basis function expansion and a linear chi square minization. typically k can express kernels that involve broadening of the PSF, but any scenario in which the operation turns into a de-convolution the method faces great difficulties.
 These scenarios take place when the PSF of N is smaller in size than R PSF. Two mitigation strategies can be used to avoid this:
 
  #. perform a re-assignemnt of the "target" image: :math:`D = k*N - R`, named the "auto-convolution" mode
@@ -101,11 +101,11 @@ The `ip_diffim` package is capable of performing subtractions using these differ
 Task preparation and run results
 ================================
 
-We run a few basic steps in order to prepare for the run of the AP pipeline. The details are not extremely important, however we can mention two critical steps.
+We run a few basic steps in order to prepare for the run of the AP pipeline. The details are not extremely important, however we can mention three critical steps.
 
  - Setting up the pipeline `yaml` file with the task configurations (or the pipetask submit script in case we can set simple options and don't need a separate `yaml`)
  - Setting up the destination AP database location with apdb script `make_apdb.py`
- - If running with HTCondor resource manager, then allocate the needed resources, this is tipically done in USDF (link to the htcondor help)
+ - If running with HTCondor resource manager, then allocate the needed resources, this is typically done in USDF (link to the htcondor help)
 
 The run results can be found in the destination repository chosen when using the configuration. In our case we ran three different instances or "flavors" of subtractions, but we also changed some configuration for the pipeline in the case of pre-convoluution, as the source detection step needs a special configuration.
 
@@ -167,7 +167,7 @@ The main corpus of the data products is composed of:
 Difference Image inspection
 ===========================
 
-Tern of Templates - Science - Difference
+Inspection of Templates - Science - Difference
 ----------------------------------------
 
 We inspected the results of image differencing by eye. First is to look at the group of Template-Science and Difference image planes.
@@ -175,9 +175,9 @@ We inspected the results of image differencing by eye. First is to look at the g
 .. figure:: /_static/figures/tern_default_g_11690_49/tern_images.png
     :name: fig-tern-default-g-11690-49
     :target: ../_images/tern_images.png
-    :alt: Tern of images for visit g-11690-49 default run
+    :alt: Set of images for visit g-11690-49 default run
 
-    Tern of images Template-Science-Difference for **Default mode**, filter `g`, visit 11690 detector 49.
+    Set of images Template-Science-Difference for **Default mode**, filter `g`, visit 11690 detector 49.
 
 We can also check the variance plane of the difference image:
 
@@ -195,11 +195,11 @@ Our inspection of the variance shows that there is some grid pattern that could 
 .. figure:: /_static/figures/tern_default_g_11690_49/psftern.png
     :name: fig-psftern-g-11690-49
     :target: ../_images/psftern.png
-    :alt: The PSFs of the tern of images for visit g-11690-49 default run
+    :alt: The PSFs of the set of images for visit g-11690-49 default run
 
-    Tern of PSF stamps, for the Default mode run, filter `g`, visit 11690 detector 49.
+    Set of PSF stamps, for the Default mode run, filter `g`, visit 11690 detector 49.
 
-Paying attention to the PSFs of the tern images we find that the Template PSF appears as higher in Signal-to-Noise Ratio (from here on SNR), as we cannot see the background noise. However it is easy to spot noise in the wings of the PSF, (it might be an artifact of the visualization, but it is unlikely). We can appreciate the Noise-Equivalent-Area circular radius in the panel titles for the template and science PSFs, which shows that for this case the PSF is broader in the science image.
+Paying attention to the PSFs of the images we find that the Template PSF appears as higher in Signal-to-Noise Ratio (from here on SNR), as we cannot see the background noise. However it is easy to spot noise in the wings of the PSF, (it might be an artifact of the visualization, but it is unlikely). We can appreciate the Noise-Equivalent-Area circular radius in the panel titles for the template and science PSFs, which shows that for this case the PSF is broader in the science image.
 
 This points that our subtraction with the default mode would be almost identical to the one in the auto-mode and that the pre-convolution procedure should converge to an equivalent kernel transformation, that yields almost the exact subtraction again.
 
@@ -209,9 +209,9 @@ We overlay the detections and fake coordinates. The plot includes the detections
 .. figure:: /_static/figures/tern_default_g_11690_49/tern_wfakes.png
     :name: fig-tern_wfakes-g-11690-49
     :target: ../_images/tern_wfakes.png
-    :alt: The tern of images including fake coordinates and detections for visit g-11690-49 default run
+    :alt: The set of images including fake coordinates and detections for visit g-11690-49 default run
 
-    Tern of images Template-Science-Difference, with the detections overlayed both the ones that pass the flag cuts (in yellow) the ones that do not pass (red) and then the fake coordinates (in green crosses), together with their estimated SNR, for the Default mode run, filter `g`, visit 11690 detector 49.
+    Set of images Template-Science-Difference, with the detections overlayed both the ones that pass the flag cuts (in yellow) the ones that do not pass (red) and then the fake coordinates (in green crosses), together with their estimated SNR, for the Default mode run, filter `g`, visit 11690 detector 49.
 
 We can find out that the detections group in the central columns, and these are flagged out. Also, fakes can be from templates and from science images, and those will look very differently in the difference images: template fakes are negative "holes" and science fakes are the normal expected transient candidate with positive counts.
 
@@ -220,9 +220,9 @@ The fakes that were found or lost are a bit hard to spot, but in the following f
 .. figure:: /_static/figures/tern_default_g_11690_49/tern_wfakes_found.png
     :name: fig-tern_wfakes-found-g-11690-49
     :target: ../_images/tern_wfakes_found.png
-    :alt: The tern of images including fake coordinates and detections for visit g-11690-49 default run
+    :alt: The set of images including fake coordinates and detections for visit g-11690-49 default run
 
-    Tern of images Template-Science-Difference, with the detected fakes overlayed both the ones that were found and lost with their expected SNR, for the Default mode run, filter `g`, visit 11690 detector 49. In red circles the ones that were not found.
+    Set of images Template-Science-Difference, with the detected fakes overlayed both the ones that were found and lost with their expected SNR, for the Default mode run, filter `g`, visit 11690 detector 49. In red circles the ones that were not found.
 
 
 We could attempt to understand if the flavors make a visible difference by searching a pair of science-template images with a PSF relation that makes the auto-convolution mode and pre-convolution mode work in theory better than the default: this is when template PSF is bigger than the science PSF.
@@ -321,7 +321,7 @@ After applying this cuts the table looks like this:
 .. ---------------+--------------+-----------------------------+
 
 The distribution of number of "good" diaSources per CCD now changes completely with respect to all the detections.
-The tipycal number of detections drops down to around 100 or 150 per CCD image, and the distribution is less disperse, showing the cumulative a soft profile.
+The typical number of detections drops down to around 100 or 150 per CCD image, and the distribution is less disperse, showing the cumulative a soft profile.
 
 .. figure:: /_static/figures/number_good_diasrcs_default.png
     :name: fig-number_good_diasrcs_default
@@ -374,7 +374,7 @@ Fake source injection analysis
 Number of matches
 -----------------
 
-We can expand the table that we built before to include the number of fake source matches.
+We can expand the table that we built before to include the number of fake source matches, also including an estimation of the "contamination" -- this is the diaSources that have no match with the fakes, and also applying the conventional flag cuts.
 
 .. _table-nfakematches:
 
@@ -407,7 +407,7 @@ Looking at the distribution of the pixel coordinates of the detections we can tr
 
 Two important caveats of this plot are: the dimensions of the chip are 4096 by 2048, so X axis is smaller, and finally some detection centroids can end up in negative coordinates or, more generally coordinates that exceed the real CCD domain.
 
-As a general note we understand that the number of transiend candidate detections should not depend on the location on the image CCD domain up to a certain extent. This means, there will be some loss of sensitivy on algorithms such as pre-convolution, as the edges will have incomplete information due to kernel padding. In the following figure we can see a zoom in into the interesting edge areas, for x and y axes.
+As a general note we understand that the number of transient candidate detections should not depend on the location on the image CCD domain up to a certain extent. This means, there will be some loss of sensitivy on algorithms such as pre-convolution, as the edges will have incomplete information due to kernel padding. In the following figure we can see a zoom in into the interesting edge areas, for x and y axes.
 
 .. figure:: /_static/figures/chipillum_x_y_histogram_zoom_diffim_flavors.png
     :name: chipillum_x_y_histogram_zoom_diffim_flavors
@@ -553,7 +553,7 @@ We define the SNR at 50% efficiency :math:`SNR_{1/2}`, and from our modelling we
 
 Our results point also that the efficiency is good at :math:`SNR>5`, but it is not reaching a stable value, and it oscilates dropping up to an 80%. This should instead be approaching to a 100% upper bound.
 
-
+Future work on how to increase the statistical signficance of the efficiency measurements could prove very beneficial, specially by adding low-SNR fake sources in our sample, and this direction is already being explored.
 
 Assesment of the photometric performance
 ========================================
