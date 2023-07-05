@@ -168,7 +168,7 @@ Difference Image inspection
 ===========================
 
 Inspection of Templates - Science - Difference
-----------------------------------------
+----------------------------------------------
 
 We inspected the results of image differencing by eye. First is to look at the group of Template-Science and Difference image planes.
 
@@ -449,8 +449,8 @@ The flags cut the excess of detections up to certain level, and also leave areas
 In the distribution of coordinates we can see that the edge excess and central excess get flattened and apparently the artifact sources are cut away.
 
 We can study again the location distribution, but as a function to the distance to the center of the image, however since the image is rectangular this will not yield a flat distribution.
-Instead we can weight each source detection by the area of the smallest central rectangle that contains the detection. This means, taking each pair of transient coordinate :math:`(x,y)` and transforming it to obtain the side of this rectangle: :math:`l = max(x', y')` with :math:`(x', y') = (x-x_c, y-y_c)`. The value :math:`\gamma` that we take finally into account is the fractional area with respect to the full CCD area: :math:`\gamma = l^2/(4096 \times 2048)`
-This quantity will be distributed as a random uniform distribution for a true random position of our
+Instead we can weigh each source detection by the area of the smallest central rectangle that contains the detection. This means, taking each pair of transient coordinate :math:`(x,y)` and transforming it to obtain the side of this rectangle: :math:`l = max(x', y')` with :math:`(x', y') = (x-x_c, y-y_c)`. The value :math:`\gamma` that we take finally into account is the fractional area with respect to the full CCD area: :math:`\gamma = l^2/(4096 \times 2048)`
+This quantity will be distributed as a random uniform distribution for a true random position of our transient detections in the CCD chip, and will not be flat for any hidden dependency on the location of the objects. 
 
 .. figure:: /_static/figures/chipillum_areafraction_combined_diffim_flavors.png
     :name: chipillum_areafraction_combined_diffim_flavors
