@@ -12,9 +12,9 @@
 
 Abstract
 ========
-This brief study presents the outcomes of a test conducted on HSC (Hyper Suprime-Cam) images of the AP (Alert Production) pipeline, which incorporated a refactored version of ip_diffim DIA (Difference Image Analysis) implementations.
+This brief study presents a test of the AP (Alert Production) pipeline conducted on HSC (Hyper Suprime-Cam) images, which incorporated a refactored version of ip_diffim DIA (Difference Image Analysis) implementation.
 The main focus of this technical note is to evaluate the performance of the new possible configurations, also known as "flavors," of the DIA processing and deliver a status report.
-The results are comparisons based on the number of detections, and the use of fake surce injections on the Visit images as well as Template images.
+The results are compared based on the number of detections, and the use of fake source injections on the Visit images and on the Template images.
 The results indicate no significant changes in the overall performance of the pipeline, our data is however not demonstrating that better accuracy and efficiency in detecting differences between multiple images is not possible, but instead, that the dataset used might not be the best scenario to uncover the advantages of these different configuration modes to the default standard DIA algorithm.
 These findings could potentially benefit future test dataset construction for a correct evaluation of the DIA algorithm for identifying transient astronomical events, in particular, the design of new fake source injected samples.
 
@@ -24,11 +24,11 @@ Introduction and objectives
 About this report
 -----------------
 
-This technical note objective is to report the resuls of a run of a recent version of the AP pipeline using the HSC "DIA Sprint" dataset.
+This technical note objective is to report the results of a run of a recent version of the AP pipeline using the HSC "DIA Sprint" dataset.
 
 The dataset is described in :ref:`2021 diffim sprint <section-dataset>`.
 
-The objectives were made explicit in a series of JIRA tickets, stating multiple tasks and a final ticket asking for this present report, that rounds up the analysis and extracts final conclusions in order to plan future developments on `ip_diffim` and it's corresponant testing.
+The objectives were made explicit in a series of JIRA tickets, stating multiple tasks and a final ticket asking for this present report, that rounds up the analysis and extracts final conclusions in order to plan future developments on `ip_diffim` and it's correspondent testing.
 
  - `DM-37957`_ (default mode processing)
  - `DM-37958`_ (default run analysis)
@@ -47,7 +47,7 @@ The objectives were made explicit in a series of JIRA tickets, stating multiple 
 .. _DM-37960: https://jira.lsstcorp.org/browse/DM-37960
 
 
-Our main task is clear: to compare the diffrent flavors or DIA implementations, however, the actual metrics to use to obtain a meaningful comparison were not specified.
+Our main task is clear: to compare the different flavors or DIA implementations, however, the actual metrics to use to obtain a meaningful comparison were not specified.
 
 In the analysis we have included a standard analysis part inspired by notebooks in the repos of ap-pipe notebooks.
 We have also included a few analysis bits not present in dm notebooks, and were obtained in a more exploratory work stage.
@@ -79,16 +79,16 @@ In the LSST Stack the subtractions are handled by `ip_diffim` package.
 
 The `ip_diffim` package is a part of the LSST data processing pipelines, designed for Difference Image Analysis (DIA). It offers several options for processing, such as selecting different kernel sizes, matching PSFs with different techniques, or using different algorithms for object detection. It provides a set of tools for performing photometry on the difference images and generating catalogs of transient astronomical events. The `ip_diffim` package is a critical component of the LSST data processing pipeline and is expected to play a significant role in the discovery of new astronomical phenomena.
 
-The package contains necesary tasks and configurations to detect and measure changes in the brightness of sources in the sky, including new bright sources undetected in archival images. In summary DIA takes two input images, a science image and a reference image (hereafter :math:`N` and :math:`R` respectively), and produces a "difference image" that contains the residual signal not accounted for with observing condition variations.
+The package contains necessary tasks and configurations to detect and measure changes in the brightness of sources in the sky, including new bright sources undetected in archival images. In summary DIA takes two input images, a science image and a reference image (hereafter :math:`N` and :math:`R` respectively), and produces a "difference image" that contains the residual signal not accounted for with observing condition variations.
 
 The image equalization is derived from point-spread function (PSF) matching the reference :math:`R` to the :math:`N` image, by means of a transformation in the form of a kernel convolution :math:`k` (convolution here is the operator :math:`*` ).
 
 :math:`D = N - k * R`
 
-In this setting, the problem is being solved by transforming R so its PSF matches the PSF from N image, and the solution for kernel k is obtained by means of a basis function expansion and a linear chi square minization. typically k can express kernels that involve broadening of the PSF, but any scenario in which the operation turns into a de-convolution the method faces great difficulties.
+In this setting, the problem is being solved by transforming R so its PSF matches the PSF from N image, and the solution for kernel k is obtained by means of a basis function expansion and a linear chi square minimization. typically k can express kernels that involve broadening of the PSF, but any scenario in which the operation turns into a de-convolution the method faces great difficulties.
 These scenarios take place when the PSF of N is smaller in size than R PSF. Two mitigation strategies can be used to avoid this:
 
- #. perform a re-assignemnt of the "target" image: :math:`D = k*N - R`, named the "auto-convolution" mode
+ #. perform a re-assignment of the "target" image: :math:`D = k*N - R`, named the "auto-convolution" mode
  #. apply a previous convolution (i.e. "pre-convolution") to the N image with a given known kernel :math:`v`, so the effective PSF of it is broader than R image PSF and the solution for k it is no longer a de-convolution. As expressed in :math:`v*D = v*N - k*R` the final result of this method is the convolution of the difference image :math:`D` with the desired kernel :math:`v`.
 
 The `ip_diffim` package is capable of performing subtractions using these different DIA "flavors": conventional A&L, `auto-mode` convolution and "pre-convolution".
@@ -107,7 +107,7 @@ We run a few basic steps in order to prepare for the run of the AP pipeline. The
  - Setting up the destination AP database location with apdb script `make_apdb.py`
  - If running with HTCondor resource manager, then allocate the needed resources, this is typically done in USDF (link to the htcondor help)
 
-The run results can be found in the destination repository chosen when using the configuration. In our case we ran three different instances or "flavors" of subtractions, but we also changed some configuration for the pipeline in the case of pre-convoluution, as the source detection step needs a special configuration.
+The run results can be found in the destination repository chosen when using the configuration. In our case we ran three different instances or "flavors" of subtractions, but we also changed some configuration for the pipeline in the case of pre-convolution, as the source detection step needs a special configuration.
 
 
 
@@ -172,7 +172,7 @@ Inspection of Templates - Science - Difference
 
 We inspected the results of image differencing by eye. First is to look at the group of Template-Science and Difference image planes.
 
-.. figure:: /_static/figures/tern_default_g_11690_49/tern_images.png
+.. figure:: /_static/figures/tern_default_g_11690_49/tern_images_cbar.png
     :name: fig-tern-default-g-11690-49
     :target: ../_images/tern_images.png
     :alt: Set of images for visit g-11690-49 default run
@@ -211,7 +211,7 @@ We overlay the detections and fake coordinates. The plot includes the detections
     :target: ../_images/tern_wfakes.png
     :alt: The set of images including fake coordinates and detections for visit g-11690-49 default run
 
-    Set of images Template-Science-Difference, with the detections overlayed both the ones that pass the flag cuts (in yellow) the ones that do not pass (red) and then the fake coordinates (in green crosses), together with their estimated SNR, for the Default mode run, filter `g`, visit 11690 detector 49.
+    Set of images Template-Science-Difference, with the detections overlaid both the ones that pass the flag cuts (in yellow) the ones that do not pass (red) and then the fake coordinates (in green crosses), together with their estimated SNR, for the Default mode run, filter `g`, visit 11690 detector 49.
 
 We can find out that the detections group in the central columns, and these are flagged out. Also, fakes can be from templates and from science images, and those will look very differently in the difference images: template fakes are negative "holes" and science fakes are the normal expected transient candidate with positive counts.
 
@@ -222,21 +222,21 @@ The fakes that were found or lost are a bit hard to spot, but in the following f
     :target: ../_images/tern_wfakes_found.png
     :alt: The set of images including fake coordinates and detections for visit g-11690-49 default run
 
-    Set of images Template-Science-Difference, with the detected fakes overlayed both the ones that were found and lost with their expected SNR, for the Default mode run, filter `g`, visit 11690 detector 49. In red circles the ones that were not found.
+    Set of images Template-Science-Difference, with the detected fakes overlaid both the ones that were found and lost with their expected SNR, for the Default mode run, filter `g`, visit 11690 detector 49. In red circles the ones that were not found.
 
 
 We could attempt to understand if the flavors make a visible difference by searching a pair of science-template images with a PSF relation that makes the auto-convolution mode and pre-convolution mode work in theory better than the default: this is when template PSF is bigger than the science PSF.
 
-For this we pick the visit 11704, detector 58 in g band, being the image with the larger difference between the science and template PSF (in the desired direction). This particular image has a PSF area for the template of 58.1 pixels square and science PSF ENA of 54.6 pixel square. If we assume circular PSF shapes (very good approximation in principle for HSC), we obtain a PSF radius of 3.04 px for Template and 2.95 for the science exposure. Although this scenario is what we need to notice the effects of the different flavors, the difference in PSF sciece might be too subtle to make a difference.
+For this we pick the visit 11704, detector 58 in g band, being the image with the larger difference between the science and template PSF (in the desired direction). This particular image has a PSF area for the template of 58.1 pixels square and science PSF ENA of 54.6 pixel square. If we assume circular PSF shapes (very good approximation in principle for HSC), we obtain a PSF radius of 3.04 px for Template and 2.95 for the science exposure. Although this scenario is what we need to notice the effects of the different flavors, the difference in PSF science might be too subtle to make a difference.
 
 .. figure:: /_static/figures/diff_11704_58_g_def_auto_preconv.png
     :name: fig-diff_11704_58_g_def_auto_preconv-11704-58
     :target: ../_images/diff_11704_58_g_def_auto_preconv.png
     :alt: The difference images for default, auto-mode and pre-convolution for visit g-11704-58 default run
 
-    Image differences with the detected fakes overlayed for the Default mode run (left), auto-convolution mode (center) and pre-convolution mode (right panel), for filter `g`, visit 11704 detector 58.
+    Image differences with the detected fakes overlaid for the Default mode run (left), auto-convolution mode (center) and pre-convolution mode (right panel), for filter `g`, visit 11704 detector 58.
 
-We appreciate subtle differences, specially around the edges, but overall the algorithms seem to be handling the difficult cases such as saturated stars in a very similar way. Our normalization of the images uses a global zscale normalization, that might get different results due to the edge pixel properties, so the subtle difference in background noise it is not substantial and we think it is equivalent. We realize that maybe this case is an easy case, and the PSFs are not different enough to make the default value extremely suboptimal (like a straight deconvolution).
+We appreciate subtle differences, specially around the edges, but overall the algorithms seem to be handling the difficult cases such as saturated stars in a very similar way. Our normalization of the images uses a global _zscale_ normalization, that might get different results due to the edge pixel properties, so the subtle difference in background noise it is not substantial and we think it is equivalent. We realize that maybe this case is an easy case, and the PSFs are not different enough to make the default value extremely suboptimal (like a straight de-convolution).
 
 
 
@@ -390,7 +390,7 @@ We can expand the table that we built before to include the number of fake sourc
     | Auto Mode |       13727 |           6698 |        4321.0 |       45728.0 |              2348.0 |
     +-----------+-------------+----------------+---------------+---------------+---------------------+
 
-We can see that the amount of matches decreases to almost a 50% when applying the flag cuts. Our conclusion is that maybe our set of flags is too agressive, and it is not really discriminating the real transients from the potential artifacts, but instead vettoing on information that might or might not be relevant.
+We can see that the amount of matches decreases to almost a 50% when applying the flag cuts. Our conclusion is that maybe our set of flags is too aggressive, and it is not really discriminating the real transients from the potential artifacts, but instead vetting on information that might or might not be relevant.
 
 
 CCD Illumination: X-Y distribution of detections
@@ -407,16 +407,16 @@ Looking at the distribution of the pixel coordinates of the detections we can tr
 
 Two important caveats of this plot are: the dimensions of the chip are 4096 by 2048, so X axis is smaller, and finally some detection centroids can end up in negative coordinates or, more generally coordinates that exceed the real CCD domain.
 
-As a general note we understand that the number of transient candidate detections should not depend on the location on the image CCD domain up to a certain extent. This means, there will be some loss of sensitivy on algorithms such as pre-convolution, as the edges will have incomplete information due to kernel padding. In the following figure we can see a zoom in into the interesting edge areas, for x and y axes.
+As a general note we understand that the number of transient candidate detections should not depend on the location on the image CCD domain up to a certain extent. This means, there will be some loss of sensitivity on algorithms such as pre-convolution, as the edges will have incomplete information due to kernel padding. In the following figure we can see a zoom in into the interesting edge areas, for x and y axes.
 
 .. figure:: /_static/figures/chipillum_x_y_histogram_zoom_diffim_flavors.png
     :name: chipillum_x_y_histogram_zoom_diffim_flavors
     :target: ../_images/chipillum_x_y_histogram_zoom_diffim_flavors.png
-    :alt: X-Y pixel coordinate distributions for diaSources
+    :alt: X-Y pixel coordinate distributions for diaSources zoomed
 
     Distribution of the X and Y coordinates of the diaSources, zoomed in the edges and central x-axis locations.
 
-Clearly the distribution has several spikes at different locations, central columns along the x-axis shows an excess of sources detected as well as the edges of all the algorithms feature an incredible amount of excess of transient detections (the plot y-axis is on logarithmic scale), even on some ocasions an order of magnitude greater than the overall value of :math:`10^2`.
+Clearly the distribution has several spikes at different locations, central columns along the x-axis shows an excess of sources detected as well as the edges of all the algorithms feature an incredible amount of excess of transient detections (the plot y-axis is on logarithmic scale), even on some occasions an order of magnitude greater than the overall value of :math:`10^2`.
 
 
 In the following figure we display the scatter of transient candidates.
@@ -457,7 +457,7 @@ This quantity will be distributed as a random uniform distribution for a true ra
     :target: ../_images/chipillum_areafraction_combined_diffim_flavors.png
     :alt: Fractional area factor of illumination.
 
-    Distribution of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the substraction.
+    Distribution of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the subtraction.
 
 The distribution of this fractional value shows that instead of a flat profile, we get higher densities of detections closer to the edges of the CCD. The distribution changes if we look at the sources that pass flag cuts, however it doesn't become completely flat.
 
@@ -466,7 +466,7 @@ The distribution of this fractional value shows that instead of a flat profile, 
     :target: ../_images/chipillum_areafraction_combined_logscale_diffim_flavors.png
     :alt: Fractional area factor of illumination.
 
-    Distribution (with the y-axis log-scale) of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the substraction.
+    Distribution (with the y-axis log-scale) of the fractional area :math:`\gamma` for different DIA flavors and for all the diaSources, the sources after flag cuts and the fakes that were detected in the subtraction.
 
 The distribution for the fakes that were found instead show that the edges are less frequent and this could mean that the flag cuts are discarding events that are effectively fake injections (i.e. true transient sources).
 This effect seems to be present to the same level on all the DIA flavors. This could point to some feature of the dataset from HSC or some other effect by the pipeline.
@@ -496,14 +496,14 @@ The PSF flux variance is :math:`\sigma^2_f` due to the sky variance will be the 
 
     The estimated SNR from PSF weighted sum of the variance plane as a function of the SNR that the pipeline assigns. This plot is only possible for the found fakes, as the lost fake sample has no SNR estimation from the pipeline.
 
-Our estimation of SNR is not in agreement with the reported SNR from the pipeline and instead we can use a different proxy SNR (heare after Model SNR), by modelling the uncertainties as done previously in other works such as `Sanchez et al 2022`_.
+Our estimation of SNR is not in agreement with the reported SNR from the pipeline and instead we can use a different proxy SNR (here after Model SNR), by modelling the uncertainties as done previously in other works such as `Sanchez et al 2022`_.
 
 .. _Sanchez et al 2022: https://ui.adsabs.harvard.edu/link_gateway/2022ApJ...934...96S/doi:10.3847/1538-4357/ac7a37
 
 To predict the SNR for a given point source of magnitude :math:`m` we first convert the magnitude value to flux in nanoJansky units, and make use of the calibration to obtain the pixel count values directly.
-Next we use the image variance plane to obtain a median variance estimate around the object :math:`\sigma_{sky}`, and multiply this with the noise-equivalent area given by the factor :math:`[\sum \rm{PSF}^2]^{-1}`. Additional terms in the variance that we include are the zeropoint calibration error and the flux count variance (following a Poisson distribution law).
+Next we use the image variance plane to obtain a median variance estimate around the object :math:`\sigma_{sky}`, and multiply this with the noise-equivalent area given by the factor :math:`[\sum \rm{PSF}^2]^{-1}`. Additional terms in the variance that we include are the zero-point calibration error and the flux count variance (following a Poisson distribution law).
 
-The obtained calculated SNR values are close to the pipeline SNR, but not exactly equal. In the folowing :ref:`figure <fig-snr-model-vs-snrflavors>` we find that the distributions do not agree completely, but do follow a similar shape profile.
+The obtained calculated SNR values are close to the pipeline SNR, but not exactly equal. In the following :ref:`figure <fig-snr-model-vs-snrflavors>` we find that the distributions do not agree completely, but do follow a similar shape profile.
 
 .. figure:: /_static/figures/snr_model_vs_snrflavors.png
     :name: fig-snr-model-vs-snrflavors
